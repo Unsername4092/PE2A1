@@ -70,7 +70,7 @@ plt.tight_layout()                     # 서로 title이나 축 label이 겹치�
 #plt.savefig('./graph.png')
 #plt.show()        # Show the graphs
 TestSiteInfo=root.find('TestSiteInfo')
-dict={'Lot':[],'Wafer':[],'Mask':[],'TestSite':[],'Name':[],'Date':[],'Operator':[],'DieColumn':[],'DieRow':[],'AnalysisWavelength (nm)':[],'Rsq of Ref. spectrum (6th)':[] ,'Max transmission of Ref. spec. (dB)':[]}
+dict={'Lot':[],'Wafer':[],'Mask':[],'TestSite':[],'Name':[],'Date':[],'Operator':[],'DieRow':[],'DieColumn':[],'AnalysisWavelength (nm)':[],'Rsq of Ref. spectrum (6th)':[] ,'Max transmission of Ref. spec. (dB)':[],'Rsq of IV':[],'I at -1V [A]':[],'I at 1V [A]':[]}
 AlignWavelength=next(root.iter('AlignWavelength'))
 Modulator=next(root.iter('Modulator'))
 for i in range(len(L)-1):
@@ -81,11 +81,14 @@ for i in range(len(L)-1):
     dict['Name'].append(Modulator.attrib['Name'])
     dict['Date'].append(root.attrib['CreationDate'])
     dict['Operator'].append(root.attrib['Operator'])
-    dict['DieColumn'].append(TestSiteInfo.attrib['DieColumn'])
     dict['DieRow'].append(TestSiteInfo.attrib['DieRow'])
+    dict['DieColumn'].append(TestSiteInfo.attrib['DieColumn'])
     dict['AnalysisWavelength (nm)'].append(AlignWavelength.text)
-    dict['Rsq of Ref. spectrum (6th)'].append(' ')
-    dict['Max transmission of Ref. spec. (dB)'].append(min(IL[i]-yr))
+    dict['Rsq of Ref. spectrum (6th)'].append(r2_r)
+    dict['Max transmission of Ref. spec. (dB)'].append(max(IL[i]))
+    dict['Rsq of IV'].append(r2)
+    dict['I at -1V [A]'].append(I[V.index(-1.0)])
+    dict['I at 1V [A]'].append(I[V.index(1.0)])
 print(dict)
 frame=pd.DataFrame(dict)
 frame.to_excel('Data.xlsx',index=False)
@@ -93,6 +96,6 @@ wb=load_workbook('Data.xlsx')
 ws=wb.active
 for i in ['E','F','J','K','L']:
     ws.column_dimensions[i].width=30
-ws.column_dimensions['D'].width=13
-ws.column_dimensions['H'].width=13
-wb.save('Data1.xlsx')
+for i in ['D','H','N','O']:
+    ws.column_dimensions[i].width=13
+wb.save('Data.xlsx')
