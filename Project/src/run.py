@@ -21,7 +21,6 @@ dict = {'Lot': [], 'Wafer': [], 'Mask': [], 'TestSite': [], 'Name': [], 'Date': 
             'Max transmission of Ref. spec. (dB)': [], 'Rsq of IV': [], 'I at -1V[A]': [], 'I at 1V[A]': []}   # 엑셀파일을 만들기위한 딕셔너리입니다.
 for allfiles in filepath :                                # dat의 모든파일을 순회합니다.
     c=c+1
-    print(c)
     filename=os.path.basename(allfiles)
     xml = etree.parse(allfiles)
     root = xml.getroot()
